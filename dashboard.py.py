@@ -83,16 +83,26 @@ st.markdown("""
         box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.3) !important;
     }
     
-    /* Select box text - ensure it's visible */
+    /* Select box text - FIXED FOR VISIBILITY IN LIGHT MODE */
     section[data-testid="stSidebar"] .stSelectbox svg {
         fill: #1e293b !important;
     }
     
+    /* CRITICAL FIX: Make dropdown selected text dark for visibility on white background */
     section[data-testid="stSidebar"] .stSelectbox > div > div > div {
         color: #1e293b !important;
         font-weight: 600 !important;
         font-size: 16px !important;
         padding: 12px 16px !important;
+    }
+    
+    /* Ensure dropdown text is always visible */
+    section[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] > div {
+        color: #1e293b !important;
+    }
+    
+    section[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] span {
+        color: #1e293b !important;
     }
     
     /* DATE INPUTS - High Contrast */
@@ -233,27 +243,46 @@ st.markdown("""
         font-size: 18px !important;
     }
     
-    /* Dropdown menu styling */
+    /* Dropdown menu styling - ENHANCED VISIBILITY FOR BOTH MODES */
     div[data-baseweb="popover"] {
-        background: #1e293b !important;
+        background: #1e293b !important;  /* Dark background for better contrast */
         border: 2px solid #3b82f6 !important;
         border-radius: 12px !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
     }
     
     div[data-baseweb="popover"] li {
-        color: #ffffff !important;
+        color: #ffffff !important;  /* White text for visibility on dark background */
         font-size: 16px !important;
         font-weight: 600 !important;
         padding: 12px 16px !important;
-        transition: background 0.2s ease !important;
+        transition: all 0.2s ease !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    div[data-baseweb="popover"] li:last-child {
+        border-bottom: none !important;
     }
     
     div[data-baseweb="popover"] li:hover {
-        background: rgba(59, 130, 246, 0.3) !important;
+        background: rgba(59, 130, 246, 0.4) !important;
+        color: #ffffff !important;
+        padding-left: 20px !important;
     }
     
     div[data-baseweb="popover"] li[aria-selected="true"] {
-        background: rgba(59, 130, 246, 0.5) !important;
+        background: rgba(59, 130, 246, 0.6) !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+    
+    /* Ensure dropdown list text is always visible */
+    div[data-baseweb="popover"] li span {
+        color: #ffffff !important;
+    }
+    
+    div[data-baseweb="popover"] li div {
+        color: #ffffff !important;
     }
     
     /* Dynamic Background with Animated Particles */
@@ -667,7 +696,7 @@ def load_google_sheets_data():
     try:
         csv_url = "https://docs.google.com/spreadsheets/d/1XtQWQXzn8OAr52yJIH39nSFbwRx74JQAifol85Var1A/export?format=csv&gid=0"
         
-        with st.spinner('📄 Fetching latest data...'):
+        with st.spinner('🔄 Fetching latest data...'):
             response = requests.get(csv_url, timeout=15)
             if response.status_code == 200:
                 df = pd.read_csv(StringIO(response.text))
@@ -696,7 +725,7 @@ with st.sidebar:
         # Enhanced status display with IST time
         ist = timezone(timedelta(hours=5, minutes=30))
         current_time_ist = datetime.now(ist).strftime("%H:%M:%S")
-        st.info(f"🕐 **Auto-refresh:** Every 5 minutes\n\n⏰ **Last check (IST):** {current_time_ist}\n\n📡 **Status:** Connected")
+        st.info(f"🕒 **Auto-refresh:** Every 5 minutes\n\n⏰ **Last check (IST):** {current_time_ist}\n\n📡 **Status:** Connected")
         
         # Premium refresh button
         if st.button("🔄 **Refresh Data**", type="primary", help="Manually refresh data from Google Sheets"):
@@ -905,14 +934,11 @@ if df is not None and filtered_df is not None:
         
         st.markdown("---")
         
-        # Enhanced data table - keep original structure
-        if 'SDR' in filtered_df.columns:
-            cols_to_drop = ['SDR','Contact Name','Title','Sales Accepted?','Remarks','Meeting Transcript','Week']
-            cols_to_drop = [col for col in cols_to_drop if col in filtered_df.columns]
-            display_df = filtered_df.drop(columns=cols_to_drop)
-            st.dataframe(display_df, height=350, use_container_width=True, hide_index=True)
-        else:
-            st.dataframe(filtered_df, height=350, use_container_width=True, hide_index=True)
+        # Enhanced data table - show SDR column
+        cols_to_drop = ['Contact Name','Title','Sales Accepted?','Remarks','Meeting Transcript','Week']
+        cols_to_drop = [col for col in cols_to_drop if col in filtered_df.columns]
+        display_df = filtered_df.drop(columns=cols_to_drop)
+        st.dataframe(display_df, height=350, use_container_width=True, hide_index=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
 
