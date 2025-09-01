@@ -1119,8 +1119,133 @@ if df is not None and filtered_df is not None:
             st.dataframe(source_summary, use_container_width=True, hide_index=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
+        # Row 3: AE (Account Executive) Performance Analytics
+        if 'AE' in filtered_df.columns:
+            st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+            
+            # Create AE performance summary
+            ae_summary = filtered_df.groupby('AE').agg({
+                'Status': ['count', lambda x: (x.str.lower() == 'done').sum()]
+            }).round(2)
+            
+            ae_summary.columns = ['Total_Demos', 'Completed_Demos']
+            ae_summary['Success_Rate'] = (ae_summary['Completed_Demos'] / ae_summary['Total_Demos'] * 100).round(1)
+            ae_summary = ae_summary.reset_index()
+            
+            # Enhanced grouped bar chart for AE
+            ae_status_counts = filtered_df.groupby(['AE', 'Status']).size().reset_index(name='Count')
+            fig_ae = px.bar(
+                ae_status_counts, 
+                x='AE', 
+                y='Count', 
+                color='Status',
+                barmode='group', 
+                color_discrete_sequence=['#1e40af', '#3b82f6', '#60a5fa', '#93c5fd', '#dbeafe', '#eff6ff'],
+                title="Account Executive Performance Overview",
+                text='Count'
+            )
+            fig_ae.update_layout(
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='#1a202c', family='Inter', size=14, weight=600),
+                title_font_size=18,
+                title_font_color='#1a202c',
+                title_font_weight=800,
+                margin=dict(l=50, r=50, t=100, b=50),
+                xaxis=dict(
+                    tickfont=dict(size=13, color='#1a202c', family='Inter', weight=600), 
+                    tickangle=45,
+                    title_font=dict(color='#1a202c', size=14, family='Inter', weight=700),
+                    showgrid=False
+                ),
+                yaxis=dict(
+                    tickfont=dict(size=13, color='#1a202c', family='Inter', weight=600),
+                    title_font=dict(color='#1a202c', size=14, family='Inter', weight=700),
+                    showgrid=False
+                ),
+                legend=dict(
+                    bgcolor='rgba(255,255,255,0.95)', 
+                    font=dict(color='#1a202c', size=14, family='Inter', weight=600),
+                    bordercolor='#1a202c',
+                    borderwidth=1
+                )
+            )
+            fig_ae.update_traces(
+                hovertemplate="<b>%{x}</b><br>Status: %{fullData.name}<br>Count: %{y}<extra></extra>",
+                textposition='outside',
+                textfont=dict(size=12, color='#1a202c', family='Inter', weight=600)
+            )
+            st.plotly_chart(fig_ae, use_container_width=True)
+            
+            # AE summary table
+            st.markdown("**📊 Account Executive Summary Metrics**")
+            st.dataframe(ae_summary, use_container_width=True, hide_index=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        # Row 4: Sales Team Performance Analytics
+        if 'Sales Team' in filtered_df.columns:
+            st.markdown('<div class="chart-container">', unsafe_allow_html=True)
+            
+            # Create sales team performance summary
+            team_summary = filtered_df.groupby('Sales Team').agg({
+                'Status': ['count', lambda x: (x.str.lower() == 'done').sum()]
+            }).round(2)
+            
+            team_summary.columns = ['Total_Demos', 'Completed_Demos']
+            team_summary['Success_Rate'] = (team_summary['Completed_Demos'] / team_summary['Total_Demos'] * 100).round(1)
+            team_summary = team_summary.reset_index()
+            
+            # Enhanced grouped bar chart for Sales Team
+            team_status_counts = filtered_df.groupby(['Sales Team', 'Status']).size().reset_index(name='Count')
+            fig_team = px.bar(
+                team_status_counts, 
+                x='Sales Team', 
+                y='Count', 
+                color='Status',
+                barmode='group', 
+                color_discrete_sequence=['#1e40af', '#3b82f6', '#60a5fa', '#93c5fd', '#dbeafe', '#eff6ff'],
+                title="Sales Team Performance Overview",
+                text='Count'
+            )
+            fig_team.update_layout(
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                font=dict(color='#1a202c', family='Inter', size=14, weight=600),
+                title_font_size=18,
+                title_font_color='#1a202c',
+                title_font_weight=800,
+                margin=dict(l=50, r=50, t=100, b=50),
+                xaxis=dict(
+                    tickfont=dict(size=13, color='#1a202c', family='Inter', weight=600), 
+                    tickangle=45,
+                    title_font=dict(color='#1a202c', size=14, family='Inter', weight=700),
+                    showgrid=False
+                ),
+                yaxis=dict(
+                    tickfont=dict(size=13, color='#1a202c', family='Inter', weight=600),
+                    title_font=dict(color='#1a202c', size=14, family='Inter', weight=700),
+                    showgrid=False
+                ),
+                legend=dict(
+                    bgcolor='rgba(255,255,255,0.95)', 
+                    font=dict(color='#1a202c', size=14, family='Inter', weight=600),
+                    bordercolor='#1a202c',
+                    borderwidth=1
+                )
+            )
+            fig_team.update_traces(
+                hovertemplate="<b>%{x}</b><br>Status: %{fullData.name}<br>Count: %{y}<extra></extra>",
+                textposition='outside',
+                textfont=dict(size=12, color='#1a202c', family='Inter', weight=600)
+            )
+            st.plotly_chart(fig_team, use_container_width=True)
+            
+            # Sales Team summary table
+            st.markdown("**📊 Sales Team Summary Metrics**")
+            st.dataframe(team_summary, use_container_width=True, hide_index=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+
         # Additional analytics sections continue...
-        # (The rest of the code remains the same)
 
     else:
         st.markdown('<div class="chart-container">', unsafe_allow_html=True)
