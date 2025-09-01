@@ -1141,7 +1141,7 @@ if df is not None and filtered_df is not None:
                 color='Status',
                 barmode='group', 
                 color_discrete_sequence=['#1e40af', '#3b82f6', '#60a5fa', '#93c5fd', '#dbeafe', '#eff6ff'],
-                title="Account Executive Performance Overview",
+                title="Account Executive Overview",
                 text='Count'
             )
             fig_ae.update_layout(
@@ -1178,7 +1178,7 @@ if df is not None and filtered_df is not None:
             st.plotly_chart(fig_ae, use_container_width=True)
             
             # AE summary table
-            st.markdown("**📊 Account Executive Summary Metrics**")
+            st.markdown("**📊 AE Overall Summary**")
             st.dataframe(ae_summary, use_container_width=True, hide_index=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
@@ -1204,7 +1204,7 @@ if df is not None and filtered_df is not None:
                 color='Status',
                 barmode='group', 
                 color_discrete_sequence=['#1e40af', '#3b82f6', '#60a5fa', '#93c5fd', '#dbeafe', '#eff6ff'],
-                title="Sales Team Performance Overview",
+                title="Sales Team Overview",
                 text='Count'
             )
             fig_team.update_layout(
