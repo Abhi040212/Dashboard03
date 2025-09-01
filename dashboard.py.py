@@ -243,16 +243,21 @@ st.markdown("""
         font-size: 18px !important;
     }
     
-    /* Dropdown menu styling - ENHANCED VISIBILITY FOR BOTH MODES */
-    div[data-baseweb="popover"] {
-        background: #1e293b !important;  /* Dark background for better contrast */
+    /* Dropdown menu styling - CONSISTENT DARK THEME FOR VISIBILITY IN BOTH MODES */
+    div[data-baseweb="popover"],
+    div[role="listbox"],
+    ul[role="listbox"] {
+        background: #1e293b !important;  /* Always dark background */
         border: 2px solid #3b82f6 !important;
         border-radius: 12px !important;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
     }
     
-    div[data-baseweb="popover"] li {
-        color: #ffffff !important;  /* White text for visibility on dark background */
+    div[data-baseweb="popover"] li,
+    div[role="option"],
+    li[role="option"] {
+        color: #ffffff !important;  /* Always white text */
+        background: #1e293b !important;  /* Ensure dark background */
         font-size: 16px !important;
         font-weight: 600 !important;
         padding: 12px 16px !important;
@@ -260,29 +265,45 @@ st.markdown("""
         border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
     
-    div[data-baseweb="popover"] li:last-child {
+    div[data-baseweb="popover"] li:last-child,
+    li[role="option"]:last-child {
         border-bottom: none !important;
     }
     
-    div[data-baseweb="popover"] li:hover {
-        background: rgba(59, 130, 246, 0.4) !important;
+    div[data-baseweb="popover"] li:hover,
+    li[role="option"]:hover {
+        background: #2d3748 !important;  /* Lighter dark on hover */
         color: #ffffff !important;
         padding-left: 20px !important;
     }
     
-    div[data-baseweb="popover"] li[aria-selected="true"] {
-        background: rgba(59, 130, 246, 0.6) !important;
+    div[data-baseweb="popover"] li[aria-selected="true"],
+    li[role="option"][aria-selected="true"] {
+        background: #3b82f6 !important;  /* Blue for selected */
         color: #ffffff !important;
         font-weight: 700 !important;
     }
     
-    /* Ensure dropdown list text is always visible */
-    div[data-baseweb="popover"] li span {
+    /* Force all text elements in dropdown to be white */
+    div[data-baseweb="popover"] * {
         color: #ffffff !important;
     }
     
-    div[data-baseweb="popover"] li div {
+    /* Ensure the dropdown container itself has dark background */
+    div[data-baseweb="select"] ul {
+        background: #1e293b !important;
+    }
+    
+    /* Override any theme-specific dropdown styling */
+    .stApp[data-theme="light"] div[data-baseweb="popover"],
+    .stApp[data-theme="dark"] div[data-baseweb="popover"] {
+        background: #1e293b !important;
+    }
+    
+    .stApp[data-theme="light"] div[data-baseweb="popover"] li,
+    .stApp[data-theme="dark"] div[data-baseweb="popover"] li {
         color: #ffffff !important;
+        background: #1e293b !important;
     }
     
     /* Dynamic Background with Animated Particles */
